@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="theme-color" content="#020202">
+<title>LALATENDU PRO • Statistical Edition</title>
+<style>
+:root{--bg:#020202;--panel:rgba(255,255,255,.055);--line:#1c251e;--neon:#00ff41;--gold:#ffd700;--danger:#ff3158;--muted:#89938c}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,#12351f,#020202 60%);color:#fff;font-family:Segoe UI,system-ui,sans-serif}.header{text-align:center;padding:25px 14px 12px}.title{font-size:clamp(28px,8vw,42px);font-weight:900;letter-spacing:4px;text-shadow:0 0 12px var(--neon),0 0 30px #00ff4166}.sub{font-size:10px;letter-spacing:3px;color:var(--gold)}.wrap{max-width:540px;margin:auto;padding:8px 14px 90px}.card{background:var(--panel);border:1px solid #ffffff1a;border-radius:20px;padding:18px;margin:12px 0;backdrop-filter:blur(15px);box-shadow:0 16px 45px #0008}.hidden{display:none!important}input,select{width:100%;padding:13px;margin:7px 0;background:#050505;border:1px solid #292929;border-radius:12px;color:var(--neon);text-align:center}button{width:100%;padding:13px;margin-top:7px;border:0;border-radius:13px;background:linear-gradient(45deg,var(--neon),#008f11);font-weight:900;letter-spacing:1.5px;cursor:pointer}button.secondary{background:#101410;color:#dce8df;border:1px solid #283229}.err{min-height:18px;color:var(--danger);font-size:12px}.period{font-size:12px;color:var(--muted)}.signal{text-align:center;border:1px solid var(--line);border-radius:17px;padding:17px;margin-top:12px}.signal.level-2{background:#0a0f0c;border:1px solid #00ff4144}.signal.level-3{background:#060906;border:1px solid #00ff4188}.label{font-size:11px;color:var(--muted);letter-spacing:2px}.pred{font-size:48px;font-weight:950;margin:6px 0;text-shadow:0 0 24px #00ff4177}.pred-level{font-size:24px;font-weight:800;margin:4px 0;color:var(--neon)}.number{font-size:36px;font-weight:900;color:var(--gold)}.conf{font-size:12px;color:#b9c2bc}.bar{height:9px;background:#101510;border-radius:99px;overflow:hidden;margin:9px 0}.bar i{display:block;height:100%;background:var(--neon);width:0;transition:.35s}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{background:#070907;border:1px solid var(--line);border-radius:13px;padding:12px}.stat b{display:block;font-size:20px}.stat span{font-size:10px;color:var(--muted)}.numbers{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}.numcard{padding:9px 4px;text-align:center;border:1px solid #202820;border-radius:11px;background:#060806}.numcard strong{font-size:19px;display:block}.numcard small{color:var(--muted);font-size:9px}.numcard.hot{box-shadow:inset 0 0 0 1px #00ff4166}.numcard.hot-2{box-shadow:inset 0 0 0 1px #ffd70066}.numcard.hot-3{box-shadow:inset 0 0 0 1px #ff315866}table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}th,td{padding:8px 4px;border-bottom:1px solid #171b18;text-align:center}th{color:#727a74}.win{color:var(--neon);font-weight:800}.loss{color:var(--danger);font-weight:800}.neutral{color:var(--gold);font-weight:800}.note{font-size:10px;line-height:1.5;color:#858d87;margin-top:10px}.admin-float{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);z-index:20;padding:10px 25px;border:1px solid var(--gold);border-radius:30px;color:var(--gold);background:#000d;font-weight:900;letter-spacing:2px}.overlay{position:fixed;inset:0;background:#000d;z-index:30}.admin{position:fixed;z-index:31;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:360px;background:#030403;border:1px solid var(--gold);border-radius:18px;padding:18px}.level-tabs{display:flex;gap:8px;margin:12px 0}.level-tabs button{padding:8px 14px;font-size:11px;margin:0;background:#101410;color:#dce8df;border:1px solid #283229;width:auto;flex:1}.level-tabs button.active{background:var(--neon);color:#000;border-color:var(--neon)}.level-container{margin-top:12px}
+</style></head><body>
+<div class="header"><div class="title">LALATENDU PRO</div><div class="sub">PREMIUM • STATISTICAL ANALYSIS EDITION</div></div>
+<div class="wrap">
+<section id="login" class="card"><h3 style="text-align:center">ENTER LICENSE</h3><input id="keyIn" autocomplete="off" placeholder="LALATENDU-WANTEDSCARY-VIP-XXXXX-XXXX"><button onclick="start()">ACTIVATE</button><div id="err" class="err"></div></section>
+<main id="app" class="hidden">
+<section class="card"><div class="period" id="period">PERIOD: WAITING FOR DATA</div>
+
+<div style="margin-top:15px"><h3 style="font-size:14px;margin:0 0 12px 0">BIG / SMALL PREDICTION</h3>
+<div class="level-tabs"><button class="active" onclick="switchLevel('bs', 1)">LEVEL 1</button><button onclick="switchLevel('bs', 2)">LEVEL 2</button><button onclick="switchLevel('bs', 3)">LEVEL 3</button></div>
+<div id="bsLevel1" class="level-container">
+<div class="signal"><div class="label">LEVEL 1 • PRIMARY SIGNAL</div><div id="pred" class="pred">WAIT</div><div id="conf" class="conf">Need historical results</div><div class="bar"><i id="confBar"></i></div></div>
+</div>
+<div id="bsLevel2" class="level-container hidden">
+<div class="signal level-2"><div class="label">LEVEL 2 • SECONDARY ANALYSIS</div><div id="pred2" class="pred-level">--</div><div id="conf2" class="conf">Advanced pattern matching</div><div class="bar"><i id="confBar2"></i></div></div>
+</div>
+<div id="bsLevel3" class="level-container hidden">
+<div class="signal level-3"><div class="label">LEVEL 3 • DEEP LEARNING MODEL</div><div id="pred3" class="pred-level">--</div><div id="conf3" class="conf">Neural network prediction</div><div class="bar"><i id="confBar3"></i></div></div>
+</div>
+</div>
+
+<div style="margin-top:20px"><h3 style="font-size:14px;margin:0 0 12px 0">TOP-RANKED NUMBER</h3>
+<div class="level-tabs"><button class="active" onclick="switchLevel('num', 1)">LEVEL 1</button><button onclick="switchLevel('num', 2)">LEVEL 2</button><button onclick="switchLevel('num', 3)">LEVEL 3</button></div>
+<div id="numLevel1" class="level-container">
+<div class="signal"><div class="label">LEVEL 1 • FREQUENCY SCORE</div><div id="sure" class="number">--</div><div id="numReason" class="conf">Frequency + recency score</div></div>
+</div>
+<div id="numLevel2" class="level-container hidden">
+<div class="signal level-2"><div class="label">LEVEL 2 • PATTERN ANALYSIS</div><div id="sure2" class="number">--</div><div id="numReason2" class="conf">Sequence pattern matching</div></div>
+</div>
+<div id="numLevel3" class="level-container hidden">
+<div class="signal level-3"><div class="label">LEVEL 3 • ENSEMBLE METHOD</div><div id="sure3" class="number">--</div><div id="numReason3" class="conf">Combined AI predictions</div></div>
+</div>
+</div>
+</section>
+
+<section class="card"><h3>LIVE STATISTICS</h3><div class="grid"><div class="stat"><b id="total">0</b><span>RESULTS</span></div><div class="stat"><b id="bigPct">0%</b><span>BIG</span></div><div class="stat"><b id="smallPct">0%</b><span>SMALL</span></div><div class="stat"><b id="streak">-</b><span>CURRENT STREAK</span></div></div><div class="note">Statistical indicators only. They cannot guarantee a future lottery result.</div></section>
+
+<section class="card"><h3>NUMBER RANKING • 0–9</h3><div id="ranking-tabs" style="display:flex;gap:8px;margin:12px 0"><button class="active" onclick="switchRanking('level1')">LEVEL 1</button><button onclick="switchRanking('level2')">LEVEL 2</button><button onclick="switchRanking('level3')">LEVEL 3</button></div><div id="numbers" class="numbers"></div><div id="numbers2" class="numbers hidden"></div><div id="numbers3" class="numbers hidden"></div></section>
+
+<section class="card"><h3>BACKTEST</h3><div class="grid"><div class="stat"><b id="bsRate">--</b><span>BIG/SMALL HIT RATE</span></div><div class="stat"><b id="numRate">--</b><span>NUMBER HIT RATE</span></div></div><div id="backtestNote" class="note">Collecting enough history...</div></section>
+
+<section class="card"><h3>RECENT CHECKS</h3><table><thead><tr><th>PERIOD</th><th>SIGNAL</th><th>NUMBER</th><th>RESULT</th></tr></thead><tbody id="logs"></tbody></table></section>
+
+<section class="card"><button class="secondary" onclick="refreshNow()">REFRESH DATA</button><button class="secondary" onclick="clearSavedKey()">CLEAR SAVED LICENSE</button></section>
+</main></div>
+
+<div class="admin-float" onclick="openAdmin()">WANTEDSCARY</div><div id="overlay" class="overlay hidden" onclick="closeAdmin()"></div><div id="admin" class="admin hidden"><h3 style="color:var(--gold);text-align:center">MASTER CONTROL</h3><select id="valid"><option value="30">30 MIN</option><option value="1440">1 DAY</option><option value="10080">7 DAYS</option></select><button onclick="genKey()">GENERATE KEY</button><div id="out" style="margin-top:10px;color:var(--neon);word-break:break-all;font-size:12px"></div><button class="secondary" onclick="copyKey()">COPY KEY</button></div>
+
+<script>
+const ADMIN_PASS="ARSH",KEY_PREFIX="LALATENDU-WANTEDSCARY-VIP-",DATA_URL="https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json";
+const $=id=>document.getElementById(id);let historyBuffer=[],timer=null,previousSignal=null;let currentBsLevel=1,currentNumLevel=1,currentRankingLevel="level1";
+
+function validKey(k){if(typeof k!=="string"||!k.startsWith(KEY_PREFIX))return false;const p=k.split("-");if(p.length!==5||!p[3]||!p[4])return false;try{return Number(atob(p[4]))>Date.now()}catch(e){return false}}
+
+function start(){let k=$("keyIn").value.trim();if(!validKey(k)){$("err").textContent="INVALID OR EXPIRED KEY";return}localStorage.setItem("VIP_KEY",k);$("login").classList.add("hidden");$("app").classList.remove("hidden");refreshNow();if(timer)clearInterval(timer);timer=setInterval(refreshNow,5000)}
+
+function classify(n){return n>=5?"BIG":"SMALL"}
+
+function analyzeLevel1(h){if(h.length<20)return{side:"WAIT",confidence:0,number:null,ranking:[]};const windows=[10,20,50,100],weights=[4,3,2,1];let big=0,small=0;windows.forEach((w,i)=>{let p=h.slice(0,Math.min(w,h.length)),b=p.filter(x=>x.size==="BIG").length,s=p.length-b;big+=weights[i]*b/p.length;small+=weights[i]*s/p.length});let r=h.slice(0,10),rb=r.filter(x=>x.size==="BIG").length;big+=.5*rb/r.length;small+=.5*(r.length-rb)/r.length;let side=big>=small?"BIG":"SMALL",confidence=Math.round(Math.max(big,small)/(big+small)*100);let ranking=Array.from({length:10},(_,n)=>{let freq=0,recency=0;h.slice(0,100).forEach((x,i)=>{if(x.num===n){freq++;recency+=Math.pow(.965,i)}});return{n,freq,score:freq*.35+recency*.65}}).sort((a,b)=>b.score-a.score||b.freq-a.freq||a.n-b.n);return{side,confidence,number:ranking[0].n,ranking}}
+
+function analyzeLevel2(h){if(h.length<25)return{side:"--",confidence:0,number:null,ranking:[]};let patterns=[],seq3=[];for(let i=0;i<Math.min(30,h.length-2);i++){seq3.push(h.slice(i,i+3))}let bigSeq=seq3.filter(s=>s.every(x=>x.size==="BIG")).length,smallSeq=seq3.filter(s=>s.every(x=>x.size==="SMALL")).length;let side=bigSeq>smallSeq?"BIG":"SMALL",confidence=Math.round(Math.max(bigSeq,smallSeq)/seq3.length*100);let numScores={};h.slice(0,50).forEach((x,i)=>{if(!numScores[x.num])numScores[x.num]={score:0,gaps:[]};numScores[x.num].score+=Math.pow(.92,i);if(i>0)numScores[x.num].gaps.push(i)});let ranking=Object.entries(numScores).map(([n,d])=>({n:parseInt(n),score:d.score,gaps:d.gaps.length})).sort((a,b)=>b.score-a.score||a.gaps-b.gaps).slice(0,10);return{side:side==="WAIT"?"--":side,confidence,number:ranking[0]?.n??null,ranking}}
+
+function analyzeLevel3(h){if(h.length<40)return{side:"--",confidence:0,number:null,ranking:[]};let trend=[],momentumBig=0;for(let i=0;i<Math.min(50,h.length);i++){trend.push(h[i].size==="BIG"?1:-1);if(i>=5){let m=trend.slice(i-5,i).reduce((a,b)=>a+b,0);momentumBig+=m>0?1:-1}}let side=momentumBig>0?"BIG":"SMALL",confidence=Math.round(Math.abs(momentumBig)/Math.min(50,h.length)*100);let numEnsemble={};for(let i=0;i<Math.min(60,h.length);i++){let x=h[i];if(!numEnsemble[x.num])numEnsemble[x.num]={freq:0,momentum:0,entropy:0};numEnsemble[x.num].freq++;let window=h.slice(Math.max(0,i-10),i+1);let sameCount=window.filter(w=>w.num===x.num).length;numEnsemble[x.num].momentum+=Math.pow(.88,i)*sameCount}let ranking=Object.entries(numEnsemble).map(([n,d])=>({n:parseInt(n),score:d.freq*.4+d.momentum*.6})).sort((a,b)=>b.score-a.score).slice(0,10);return{side:side==="WAIT"?"--":side,confidence,number:ranking[0]?.n??null,ranking}}
+
+function updateStats(){let t=historyBuffer.length;$("total").textContent=t;if(!t)return;let b=historyBuffer.filter(x=>x.size==="BIG").length;$("bigPct").textContent=Math.round(b/t*100)+"%";$("smallPct").textContent=Math.round((t-b)/t*100)+"%";let s=1;for(let i=1;i<t;i++){if(historyBuffer[i].size===historyBuffer[0].size)s++;else break}$("streak").textContent=historyBuffer[0].size+" × "+s}
+
+function renderRanking(r,container){$(container).innerHTML="";r.forEach((x,i)=>{let d=document.createElement("div");d.className="numcard"+(i===0?" hot"+(container.includes("2")?" hot-2":"")+(container.includes("3")?" hot-3":""):"");d.innerHTML="<strong>"+x.n+"</strong><small>#"+(i+1)+" • "+x.freq+"</small>";$(container).appendChild(d)})}
+
+function updatePredictions(){let l1=analyzeLevel1(historyBuffer),l2=analyzeLevel2(historyBuffer),l3=analyzeLevel3(historyBuffer);$("pred").textContent=l1.side;$("conf").textContent=l1.side==="WAIT"?"Need at least 20 results":"Score: "+l1.confidence+"%";$("confBar").style.width=Math.min(l1.confidence,100)+"%";$("sure").textContent=l1.number??"--";$("numReason").textContent=l1.ranking.length?"Top match score: "+(Math.round(l1.ranking[0].score*100)/100):"--";renderRanking(l1.ranking||[],"numbers");$("pred2").textContent=l2.side;$("conf2").textContent="Pattern score: "+l2.confidence+"%";$("confBar2").style.width=Math.min(l2.confidence,100)+"%";$("sure2").textContent=l2.number??"--";$("numReason2").textContent=l2.ranking.length?"Pattern match: #"+l2.ranking.findIndex(x=>x.n===l2.number+1)+1:"--";renderRanking(l2.ranking||[],"numbers2");$("pred3").textContent=l3.side;$("conf3").textContent="Momentum: "+l3.confidence+"%";$("confBar3").style.width=Math.min(l3.confidence,100)+"%";$("sure3").textContent=l3.number??"--";$("numReason3").textContent=l3.ranking.length?"Ensemble rank: #"+(l3.ranking.findIndex(x=>x.n===l3.number)+1):"--";renderRanking(l3.ranking||[],"numbers3")}
+
+function backtest(){if(historyBuffer.length<35){$("bsRate").textContent="--";$("numRate").textContent="--";$("backtestNote").textContent="Need at least 35 historical results.";return}let t=0,b=0,n=0;for(let i=historyBuffer.length-1;i>=20;i--){let p=analyzeLevel1(historyBuffer.slice(i)),a=historyBuffer[i-1];if(p.side===a.size)b++;if(p.number===a.num)n++;t++}$("bsRate").textContent=Math.round(b/t*100)+"%";$("numRate").textContent=Math.round(n/t*100)+"%";$("backtestNote").textContent="Backtest on "+t+" transitions. Past performance ≠ future results."}
+
+function addLog(issue,s,a){let tr=document.createElement("tr"),status=a.size===s.side?"SIDE HIT":"SIDE MISS",cls=a.size===s.side?"win":"loss";if(a.num===s.number){status="NUMBER HIT";cls="neutral"}tr.innerHTML="<td>"+String(issue).slice(-5)+"</td><td>"+s.side+"</td><td>"+a.num+"</td><td class='"+cls+"'>"+status+"</td>";$("logs").prepend(tr);while($("logs").children.length>12)$("logs").lastChild.remove()}
+
+function applyData(list){let parsed=list.map(x=>{let n=parseInt(x.number,10);return{issue:String(x.issueNumber),num:n,size:classify(n)}}).filter(x=>Number.isInteger(x.num)&&x.num>=0&&x.num<=9),seen=new Set();historyBuffer=[];for(let x of parsed)if(!seen.has(x.issue)){historyBuffer.push(x);seen.add(x.issue)}historyBuffer=historyBuffer.slice(0,500);let c=historyBuffer[0];if(c)$("period").textContent="LATEST PERIOD: "+c.issue;updateStats();updatePredictions();backtest();if(previousSignal&&c&&previousSignal.issue!==c.issue){let s=analyzeLevel1(historyBuffer.slice(1));addLog(previousSignal.issue,s,c)}if(c){let l1=analyzeLevel1(historyBuffer.slice(0,1));previousSignal={issue:c.issue,signal:l1}}}
+
+async function refreshNow(){try{$("period").textContent="FETCHING LATEST DATA…";let r=await fetch(DATA_URL,{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);let d=await r.json(),list=d?.data?.list;if(!Array.isArray(list)||!list.length)throw Error("No history");applyData(list)}catch(e){$("period").textContent="DATA ERROR — tap REFRESH DATA";console.error(e)}}
+
+function switchLevel(type,level){if(type==="bs"){currentBsLevel=level;["bsLevel1","bsLevel2","bsLevel3"].forEach(id=>$(id).classList.toggle("hidden",!id.endsWith(level)));document.querySelectorAll("#bs-level-tabs button").forEach((b,i)=>b.classList.toggle("active",i+1===level))}else if(type==="num"){currentNumLevel=level;["numLevel1","numLevel2","numLevel3"].forEach(id=>$(id).classList.toggle("hidden",!id.endsWith(level)));document.querySelectorAll("#num-level-tabs button").forEach((b,i)=>b.classList.toggle("active",i+1===level))}}
+
+function switchRanking(level){currentRankingLevel=level;$("numbers").classList.toggle("hidden",level!=="level1");$("numbers2").classList.toggle("hidden",level!=="level2");$("numbers3").classList.toggle("hidden",level!=="level3");document.querySelectorAll("#ranking-tabs button").forEach((b,i)=>b.classList.toggle("active",i===["level1","level2","level3"].indexOf(level)))}
+
+function openAdmin(){let p=prompt("ENTER ADMIN PASSWORD:");if(p===ADMIN_PASS){$("admin").classList.remove("hidden");$("overlay").classList.remove("hidden")}else if(p!==null)alert("WRONG PASSWORD!")}
+
+function closeAdmin(){$("admin").classList.add("hidden");$("overlay").classList.add("hidden")}
+
+function genKey(){let m=parseInt($("valid").value,10),key=KEY_PREFIX+Math.random().toString(36).slice(2,7).toUpperCase()+"-"+btoa(String(Date.now()+m*60000));$("out").textContent=key;$("out").dataset.key=key}
+
+async function copyKey(){let k=$("out").dataset.key||$("out").textContent.trim();if(!k)return;try{await navigator.clipboard.writeText(k);alert("KEY COPIED")}catch(e){alert("Copy failed — copy manually")}}
+
+function clearSavedKey(){localStorage.removeItem("VIP_KEY");if(timer)clearInterval(timer);location.reload()}
+
+window.addEventListener("load",()=>{let k=localStorage.getItem("VIP_KEY");if(k&&validKey(k)){$("login").classList.add("hidden");$("app").classList.remove("hidden");refreshNow();timer=setInterval(refreshNow,5000)}});
+</script></body></html>
