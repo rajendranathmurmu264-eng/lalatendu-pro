@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#020202">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>LALATENDU PRO • Statistical Edition</title>
+<style>
+:root{--bg:#020202;--panel:rgba(255,255,255,.055);--line:#1c251e;--neon:#00ff41;--gold:#ffd700;--danger:#ff3158;--muted:#89938c;--warning:#ffa500}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,#12351f,#020202 60%);color:#fff;font-family:Segoe UI,system-ui,sans-serif}.header{text-align:center;padding:25px 14px 12px}.title{font-size:clamp(28px,8vw,42px);font-weight:900;letter-spacing:4px;text-shadow:0 0 12px var(--neon),0 0 30px #00ff4166}.sub{font-size:10px;letter-spacing:3px;color:var(--gold)}.wrap{max-width:540px;margin:auto;padding:8px 14px 90px}.card{background:var(--panel);border:1px solid #ffffff1a;border-radius:20px;padding:18px;margin:12px 0;backdrop-filter:blur(15px);box-shadow:0 16px 45px #0008}.hidden{display:none!important}input,select{width:100%;padding:13px;margin:7px 0;background:#050505;border:1px solid #292929;border-radius:12px;color:var(--neon);text-align:center}button{width:100%;padding:13px;margin-top:7px;border:0;border-radius:13px;background:linear-gradient(45deg,var(--neon),#008f11);font-weight:900;letter-spacing:1.5px;cursor:pointer;transition:.2s}button:hover:not(:disabled){opacity:.9}button:disabled{opacity:.5;cursor:not-allowed}button.secondary{background:#101410;color:#dce8df;border:1px solid #283229}.err{min-height:18px;color:var(--danger);font-size:12px}.warn{color:var(--warning);font-size:12px}.info{color:var(--muted);font-size:12px}.period{font-size:12px;color:var(--muted)}.signal{text-align:center;border:1px solid var(--line);border-radius:17px;padding:17px;margin-top:12px}.label{font-size:11px;color:var(--muted);letter-spacing:2px}.pred{font-size:48px;font-weight:950;margin:6px 0;text-shadow:0 0 24px #00ff4177}.number{font-size:36px;font-weight:900;color:var(--gold)}.conf{font-size:12px;color:#b9c2bc}.bar{height:9px;background:#101510;border-radius:99px;overflow:hidden;margin:9px 0}.bar i{display:block;height:100%;background:var(--neon);width:0;transition:.35s}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{background:#070907;border:1px solid var(--line);border-radius:13px;padding:12px}.stat b{display:block;font-size:20px}.stat span{font-size:10px;color:var(--muted)}.numbers{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}.numcard{padding:9px 4px;text-align:center;border:1px solid #202820;border-radius:11px;background:#060806}.numcard strong{font-size:19px;display:block}.numcard small{color:var(--muted);font-size:9px}.numcard.hot{box-shadow:inset 0 0 0 1px #00ff4166}table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}th,td{padding:8px 4px;border-bottom:1px solid #171b18;text-align:center}th{color:#727a74}.win{color:var(--neon);font-weight:800}.loss{color:var(--danger);font-weight:800}.neutral{color:var(--gold);font-weight:800}.note{font-size:10px;line-height:1.5;color:#858d87;margin-top:10px}.admin-float{position:fixed;bottom:15px;right:15px;z-index:20;padding:10px 15px;border:1px solid var(--gold);border-radius:20px;color:var(--gold);background:#000d;font-weight:900;font-size:12px;cursor:pointer;transition:.2s;user-select:none}.admin-float:hover{background:#001a}.overlay{position:fixed;inset:0;background:#0008;z-index:30;display:flex;align-items:center;justify-content:center}.admin{position:relative;width:90%;max-width:360px;background:#030403;border:1px solid var(--gold);border-radius:18px;padding:18px;max-height:80vh;overflow-y:auto}.admin-close{position:absolute;top:10px;right:15px;background:none;border:none;color:var(--gold);font-size:24px;cursor:pointer;width:auto;padding:0;margin:0}.admin h3{color:var(--gold);text-align:center;margin-top:0}.status-badge{display:inline-block;padding:4px 10px;border-radius:12px;font-size:10px;margin-top:8px;font-weight:bold}.status-ok{background:#00ff4133;color:var(--neon)}.status-error{background:#ff315833;color:var(--danger)}.status-warn{background:#ffa50033;color:var(--warning)}.status-row{display:flex;justify-content:space-between;padding:6px 0;font-size:11px;border-bottom:1px solid #1a1f1c}.status-label{color:var(--muted)}.status-value{color:var(--gold);font-weight:bold;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="title">LALATENDU PRO</div>
+<div class="sub">PREMIUM • STATISTICAL ANALYSIS EDITION</div>
+</div>
+<div class="wrap">
+<section id="login" class="card">
+<h3 style="text-align:center">ENTER LICENSE KEY</h3>
+<input id="keyIn" autocomplete="off" placeholder="Your license key" maxlength="100">
+<button id="activateBtn" onclick="start()">ACTIVATE</button>
+<div id="err" class="err"></div>
+<div id="info" class="info"></div>
+</section>
+<main id="app" class="hidden">
+<section class="card">
+<div class="period" id="period">PERIOD: WAITING FOR DATA</div>
+<div id="statusBar" class="status-badge status-warn">INITIALIZING</div>
+<div class="signal">
+<div class="label">BIG / SMALL STATISTICAL SIGNAL</div>
+<div id="pred" class="pred">WAIT</div>
+<div id="conf" class="conf">Need historical results</div>
+<div class="bar"><i id="confBar"></i></div>
+</div>
+<div class="signal">
+<div class="label">TOP-RANKED NUMBER</div>
+<div id="sure" class="number">--</div>
+<div id="numReason" class="conf">Frequency + recency score</div>
+</div>
+</section>
+<section class="card">
+<h3>LIVE STATISTICS</h3>
+<div class="grid">
+<div class="stat"><b id="total">0</b><span>RESULTS</span></div>
+<div class="stat"><b id="bigPct">0%</b><span>BIG</span></div>
+<div class="stat"><b id="smallPct">0%</b><span>SMALL</span></div>
+<div class="stat"><b id="streak">-</b><span>CURRENT STREAK</span></div>
+</div>
+<div class="note">Statistical indicators only. They cannot guarantee a future lottery result.</div>
+</section>
+<section class="card">
+<h3>NUMBER RANKING • 0–9</h3>
+<div id="numbers" class="numbers"></div>
+</section>
+<section class="card">
+<h3>BACKTEST</h3>
+<div class="grid">
+<div class="stat"><b id="bsRate">--</b><span>BIG/SMALL HIT RATE</span></div>
+<div class="stat"><b id="numRate">--</b><span>NUMBER HIT RATE</span></div>
+</div>
+<div id="backtestNote" class="note">Collecting enough history...</div>
+</section>
+<section class="card">
+<h3>RECENT CHECKS</h3>
+<table><thead><tr><th>PERIOD</th><th>SIGNAL</th><th>NUMBER</th><th>RESULT</th></tr></thead><tbody id="logs"></tbody></table>
+</section>
+<section class="card">
+<button class="secondary" id="refreshBtn" onclick="refreshNow()" disabled>REFRESH DATA</button>
+<button class="secondary" onclick="logout()">LOGOUT</button>
+</section>
+</main>
+</div>
+
+<div class="admin-float" onclick="openAdmin()" style="cursor:pointer">⚙ STATUS</div>
+<div id="overlay" class="overlay hidden" onclick="closeAdmin()">
+<div id="admin" class="admin hidden" onclick="event.stopPropagation()">
+<button class="admin-close" onclick="closeAdmin()">×</button>
+<h3>SYSTEM STATUS & DIAGNOSTICS</h3>
+<div style="font-size:11px;color:var(--muted);line-height:1.8">
+<div class="status-row">
+<span class="status-label">API Status:</span>
+<span class="status-value" id="apiStatus">INITIALIZING</span>
+</div>
+<div class="status-row">
+<span class="status-label">Data Points:</span>
+<span class="status-value" id="dataPoints">0</span>
+</div>
+<div class="status-row">
+<span class="status-label">Last Update:</span>
+<span class="status-value" id="lastUpdate">Never</span>
+</div>
+<div class="status-row">
+<span class="status-label">License Status:</span>
+<span class="status-value" id="licenseStatus">CHECKING</span>
+</div>
+<div class="status-row">
+<span class="status-label">External API:</span>
+<span class="status-value" id="extApiStatus">CHECKING</span>
+</div>
+<div class="status-row">
+<span class="status-label">CORS Ready:</span>
+<span class="status-value" id="corsStatus">CHECKING</span>
+</div>
+</div>
+<button class="secondary" onclick="forceRefresh()" style="margin-top:15px">FORCE REFRESH</button>
+<button class="secondary" onclick="verifyLicense()" style="margin-top:7px">VERIFY LICENSE</button>
+<button class="secondary" onclick="closeAdmin()">CLOSE</button>
+</div>
+</div>
+
+<script>
+'use strict';
+
+// ============================================================
+// CONFIGURATION & CONSTANTS
+// ============================================================
+const CONFIG = {
+  // Backend API endpoint
+  API_BASE: window.location.origin, // Use same origin or set to backend URL
+  LICENSE_API: '/api/v1/license/validate',
+  VERIFY_API: '/api/v1/license/verify',
+  DATA_API: '/api/v1/data',
+  
+  // External lottery data API (proxied through backend)
+  DATA_URL: '/api/v1/data', // Use backend proxy, not direct external API
+  
+  // Timeouts and retries
+  FETCH_TIMEOUT: 15000,
+  REFRESH_INTERVAL: 5000,
+  MIN_REFRESH_INTERVAL: 2000,
+  RETRY_ATTEMPTS: 3,
+  RETRY_BACKOFF: 1000,
+  
+  // Data validation
+  MIN_HISTORY: 20,
+  MAX_HISTORY: 500,
+  MAX_ISSUE_LENGTH: 20,
+  MAX_TEXT_LENGTH: 200,
+  
+  // Session management
+  SESSION_STORAGE_KEY: '_sess_token'
+};
+
+// ============================================================
+// STATE MANAGEMENT
+// ============================================================
+const state = {
+  historyBuffer: [],
+  timer: null,
+  previousSignal: null,
+  lastRefreshTime: 0,
+  isRefreshing: false,
+  retryCount: 0,
+  apiStatus: 'INITIALIZING',
+  extApiStatus: 'CHECKING',
+  corsStatus: 'CHECKING',
+  sessionToken: null,
+  licenseValid: false,
+  licenseExpiry: null,
+  sessionStartTime: Date.now()
+};
+
+// ============================================================
+// DOM UTILITIES - SAFE OPERATIONS
+// ============================================================
+const $ = id => document.getElementById(id);
+
+const setText = (id, text) => {
+  const el = $(id);
+  if (!el) {
+    console.warn(`Element ${id} not found`);
+    return;
+  }
+  el.textContent = String(text).slice(0, CONFIG.MAX_TEXT_LENGTH);
+};
+
+const setClass = (id, className, force) => {
+  const el = $(id);
+  if (!el) return;
+  if (force !== undefined) {
+    el.classList.toggle(className, force);
+  } else {
+    el.classList.toggle(className);
+  }
+};
+
+const createSafeTableRow = (issue, signal, number, status, cssClass) => {
+  const tr = document.createElement('tr');
+  const cells = [
+    String(issue).slice(-5),
+    String(signal).slice(0, 10),
+    String(number).slice(0, 2),
+    String(status).slice(0, 20)
+  ];
+  
+  tr.innerHTML = cells.map((c, i) => {
+    const safe = c.replace(/[<>&"']/g, '');
+    return `<td class="${i === 3 ? cssClass : ''}">${safe}</td>`;
+  }).join('');
+  
+  return tr;
+};
+
+// ============================================================
+// HTTP UTILITIES WITH TIMEOUT
+// ============================================================
+const fetchWithTimeout = (url, options = {}, timeout = CONFIG.FETCH_TIMEOUT) => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  
+  return fetch(url, { ...options, signal: controller.signal })
+    .finally(() => clearTimeout(timeoutId));
+};
+
+const fetchWithRetry = async (url, options = {}) => {
+  let lastError;
+  
+  for (let attempt = 0; attempt < CONFIG.RETRY_ATTEMPTS; attempt++) {
+    try {
+      const response = await fetchWithTimeout(url, {
+        ...options,
+        cache: 'no-store'
+      }, CONFIG.FETCH_TIMEOUT);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      return response;
+      
+    } catch (error) {
+      lastError = error;
+      
+      if (error.name === 'AbortError') {
+        lastError = new Error('Request timeout');
+      }
+      
+      if (attempt < CONFIG.RETRY_ATTEMPTS - 1) {
+        const backoff = CONFIG.RETRY_BACKOFF * Math.pow(2, attempt);
+        await new Promise(resolve => setTimeout(resolve, backoff));
+      }
+    }
+  }
+  
+  throw lastError;
+};
+
+// ============================================================
+// LICENSE VALIDATION - SERVER-SIDE ONLY
+// ============================================================
+const validateLicenseWithBackend = async (key) => {
+  if (typeof key !== 'string' || !key || key.length < 5 || key.length > 100) {
+    return {
+      valid: false,
+      error: 'INVALID_FORMAT',
+      message: 'License key format is invalid'
+    };
+  }
+  
+  try {
+    const response = await fetchWithTimeout(CONFIG.API_BASE + CONFIG.LICENSE_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        license: key,
+        timestamp: Date.now()
+      })
+    }, CONFIG.FETCH_TIMEOUT);
+    
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      return {
+        valid: false,
+        error: error.error || 'VALIDATION_FAILED',
+        message: error.message || 'License validation failed'
+      };
+    }
+    
+    const data = await response.json();
+    
+    if (!data.valid) {
+      return {
+        valid: false,
+        error: data.error || 'INVALID_LICENSE',
+        message: data.message || 'License is not valid'
+      };
+    }
+    
+    // Validate required fields
+    if (!data.token || !data.expires_at || typeof data.expires_at !== 'number') {
+      return {
+        valid: false,
+        error: 'INVALID_RESPONSE',
+        message: 'Server returned invalid data'
+      };
+    }
+    
+    // Check if license is expired
+    if (data.expires_at < Date.now()) {
+      return {
+        valid: false,
+        error: 'EXPIRED',
+        message: 'License has expired'
+      };
+    }
+    
+    return {
+      valid: true,
+      token: data.token,
+      expires_at: data.expires_at,
+      features: data.features || [],
+      message: 'License validated successfully'
+    };
+    
+  } catch (error) {
+    console.error('License validation error:', error);
+    return {
+      valid: false,
+      error: 'NETWORK_ERROR',
+      message: `Connection error: ${error.message}`
+    };
+  }
+};
+
+const saveSessionToken = (token) => {
+  try {
+    sessionStorage.setItem(CONFIG.SESSION_STORAGE_KEY, token);
+  } catch (e) {
+    console.error('Failed to save session token:', e);
+  }
+};
+
+const getSessionToken = () => {
+  try {
+    return sessionStorage.getItem(CONFIG.SESSION_STORAGE_KEY);
+  } catch (e) {
+    console.error('Failed to retrieve session token:', e);
+    return null;
+  }
+};
+
+const clearSession = () => {
+  try {
+    sessionStorage.removeItem(CONFIG.SESSION_STORAGE_KEY);
+  } catch (e) {
+    console.error('Failed to clear session:', e);
+  }
+};
+
+// ============================================================
+// DATA FETCHING WITH AUTHENTICATION
+// ============================================================
+const validateDataResponse = (data) => {
+  if (!data || typeof data !== 'object') {
+    return { valid: false, error: 'Invalid data type' };
+  }
+  
+  if (!data.data || !Array.isArray(data.data.list)) {
+    return { valid: false, error: 'Missing data.list array' };
+  }
+  
+  if (data.data.list.length === 0) {
+    return { valid: false, error: 'Empty data list' };
+  }
+  
+  // Validate first few items
+  for (let i = 0; i < Math.min(3, data.data.list.length); i++) {
+    const item = data.data.list[i];
+    if (!item.issueNumber || typeof item.number === 'undefined') {
+      return { valid: false, error: `Invalid item at index ${i}` };
+    }
+  }
+  
+  return { valid: true };
+};
+
+const fetchDataWithAuth = async () => {
+  try {
+    if (!state.sessionToken) {
+      throw new Error('No session token');
+    }
+
+    const response = await fetchWithRetry(CONFIG.API_BASE + CONFIG.DATA_API, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${state.sessionToken}`
+      }
+    });
+    
+    const data = await response.json();
+    
+    // Validate API response structure
+    const validation = validateDataResponse(data);
+    if (!validation.valid) {
+      throw new Error(`Data validation failed: ${validation.error}`);
+    }
+    
+    state.extApiStatus = 'OK';
+    state.corsStatus = 'OK';
+    return data.data.list;
+    
+  } catch (error) {
+    console.error('Data fetch error:', error.message);
+    
+    if (error.name === 'AbortError') {
+      state.apiStatus = 'TIMEOUT';
+      state.extApiStatus = 'TIMEOUT';
+    } else if (error.message.includes('CORS') || error.message.includes('cors')) {
+      state.corsStatus = 'FAILED';
+      state.extApiStatus = 'CORS_ERROR';
+    } else {
+      state.extApiStatus = `ERROR: ${error.message}`;
+    }
+    
+    throw error;
+  }
+};
+
+// ============================================================
+// DATA PROCESSING & ANALYSIS
+// ============================================================
+const classify = (n) => {
+  const num = parseInt(n, 10);
+  if (!Number.isInteger(num)) return 'UNKNOWN';
+  return num >= 5 ? 'BIG' : 'SMALL';
+};
+
+const analyze = (history) => {
+  if (!Array.isArray(history) || history.length < CONFIG.MIN_HISTORY) {
+    return { side: 'WAIT', confidence: 0, number: null, ranking: [] };
+  }
+  
+  const windows = [10, 20, 50, 100];
+  const weights = [4, 3, 2, 1];
+  let big = 0, small = 0;
+  
+  windows.forEach((w, i) => {
+    const slice = history.slice(0, Math.min(w, history.length));
+    const bigCount = slice.filter(x => x.size === 'BIG').length;
+    const smallCount = slice.length - bigCount;
+    
+    if (slice.length > 0) {
+      big += weights[i] * bigCount / slice.length;
+      small += weights[i] * smallCount / slice.length;
+    }
+  });
+  
+  const recent = history.slice(0, 10);
+  if (recent.length > 0) {
+    const recentBig = recent.filter(x => x.size === 'BIG').length;
+    big += 0.5 * recentBig / recent.length;
+    small += 0.5 * (recent.length - recentBig) / recent.length;
+  }
+  
+  const side = big >= small ? 'BIG' : 'SMALL';
+  const divisor = big + small;
+  const confidence = divisor > 0 ? Math.round(Math.max(big, small) / divisor * 100) : 0;
+  
+  const ranking = Array.from({ length: 10 }, (_, n) => {
+    let freq = 0, recency = 0;
+    history.slice(0, 100).forEach((x, i) => {
+      if (x.num === n) {
+        freq++;
+        recency += Math.pow(0.965, i);
+      }
+    });
+    return { n, freq, score: freq * 0.35 + recency * 0.65 };
+  }).sort((a, b) => b.score - a.score || b.freq - a.freq || a.n - b.n);
+  
+  return { side, confidence, number: ranking[0]?.n ?? null, ranking };
+};
+
+const updateStats = () => {
+  const t = state.historyBuffer.length;
+  setText('total', t);
+  
+  if (t === 0) return;
+  
+  const b = state.historyBuffer.filter(x => x.size === 'BIG').length;
+  setText('bigPct', Math.round(b / t * 100) + '%');
+  setText('smallPct', Math.round((t - b) / t * 100) + '%');
+  
+  let streak = 1;
+  for (let i = 1; i < t; i++) {
+    if (state.historyBuffer[i].size === state.historyBuffer[0].size) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+  setText('streak', state.historyBuffer[0].size + ' × ' + streak);
+};
+
+const renderRanking = (ranking) => {
+  const container = $('numbers');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  
+  if (!Array.isArray(ranking) || ranking.length === 0) return;
+  
+  ranking.slice(0, 10).forEach((x, i) => {
+    const div = document.createElement('div');
+    div.className = 'numcard' + (i === 0 ? ' hot' : '');
+    
+    const strong = document.createElement('strong');
+    strong.textContent = String(x.n);
+    div.appendChild(strong);
+    
+    const small = document.createElement('small');
+    small.textContent = '#' + (i + 1) + ' • ' + x.freq + ' hits';
+    div.appendChild(small);
+    
+    container.appendChild(div);
+  });
+};
+
+const backtest = () => {
+  const h = state.historyBuffer;
+  
+  if (h.length < 35) {
+    setText('bsRate', '--');
+    setText('numRate', '--');
+    setText('backtestNote', 'Need at least 35 historical results.');
+    return;
+  }
+  
+  let t = 0, b = 0, n = 0;
+  for (let i = h.length - 1; i >= 20; i--) {
+    const p = analyze(h.slice(i));
+    const a = h[i - 1];
+    
+    if (p.side === a.size) b++;
+    if (p.number === a.num) n++;
+    t++;
+  }
+  
+  setText('bsRate', Math.round(b / t * 100) + '%');
+  setText('numRate', Math.round(n / t * 100) + '%');
+  setText('backtestNote', `Backtest on ${t} transitions. Past performance ≠ future results.`);
+};
+
+const addLog = (issue, signal, actual) => {
+  const container = $('logs');
+  if (!container || !signal || !actual) return;
+  
+  const status = actual.size === signal.side ? 'SIDE HIT' : 'SIDE MISS';
+  const cssClass = actual.num === signal.number ? 'neutral' : (actual.size === signal.side ? 'win' : 'loss');
+  
+  const tr = createSafeTableRow(issue, signal.side, actual.num, status, cssClass);
+  container.prepend(tr);
+  
+  while (container.children.length > 12) {
+    container.removeChild(container.lastChild);
+  }
+};
+
+const applyData = (list) => {
+  if (!Array.isArray(list) || list.length === 0) {
+    setText('period', 'NO DATA AVAILABLE');
+    return;
+  }
+  
+  const parsed = list
+    .map(x => {
+      const n = parseInt(x.number || x.num, 10);
+      return {
+        issue: String(x.issueNumber || x.issue || '').slice(0, CONFIG.MAX_ISSUE_LENGTH),
+        num: n,
+        size: classify(n)
+      };
+    })
+    .filter(x => Number.isInteger(x.num) && x.num >= 0 && x.num <= 9 && x.issue);
+  
+  const seen = new Set();
+  state.historyBuffer = [];
+  
+  for (const item of parsed) {
+    if (!seen.has(item.issue)) {
+      state.historyBuffer.push(item);
+      seen.add(item.issue);
+    }
+  }
+  
+  state.historyBuffer = state.historyBuffer.slice(0, CONFIG.MAX_HISTORY);
+  
+  const current = state.historyBuffer[0];
+  if (current) {
+    setText('period', 'LATEST PERIOD: ' + current.issue);
+  }
+  
+  updateStats();
+  
+  const signal = analyze(state.historyBuffer);
+  setText('pred', signal.side);
+  setText('sure', signal.number ?? '--');
+  
+  if (signal.side === 'WAIT') {
+    setText('conf', 'Need at least ' + CONFIG.MIN_HISTORY + ' results');
+  } else {
+    setText('conf', `Statistical score: ${signal.confidence}% (not a guarantee)`);
+  }
+  
+  const confBar = $('confBar');
+  if (confBar) confBar.style.width = Math.min(signal.confidence, 100) + '%';
+  
+  renderRanking(signal.ranking || []);
+  backtest();
+  
+  if (state.previousSignal && current && state.previousSignal.issue !== current.issue) {
+    addLog(state.previousSignal.issue, state.previousSignal.signal, current);
+  }
+  
+  if (current && signal.side !== 'WAIT') {
+    state.previousSignal = { issue: current.issue, signal };
+  }
+  
+  state.apiStatus = 'OK';
+  updateStatusDisplay();
+};
+
+const refreshNow = async () => {
+  const now = Date.now();
+  if (state.isRefreshing || (now - state.lastRefreshTime) < CONFIG.MIN_REFRESH_INTERVAL) {
+    return;
+  }
+  
+  state.isRefreshing = true;
+  state.lastRefreshTime = now;
+  
+  setText('period', 'FETCHING LATEST DATA…');
+  setClass('statusBar', 'status-ok', false);
+  setClass('statusBar', 'status-warn', true);
+  
+  try {
+    const list = await fetchDataWithAuth();
+    applyData(list);
+    state.retryCount = 0;
+    setClass('statusBar', 'status-warn', false);
+    setClass('statusBar', 'status-ok', true);
+    
+  } catch (error) {
+    console.error('Data fetch failed:', error.message);
+    setText('period', 'DATA ERROR — tap REFRESH DATA');
+    state.apiStatus = `ERROR: ${error.message}`;
+    setClass('statusBar', 'status-ok', false);
+    setClass('statusBar', 'status-error', true);
+    
+  } finally {
+    state.isRefreshing = false;
+    updateStatusDisplay();
+  }
+};
+
+const updateStatusDisplay = () => {
+  setText('apiStatus', state.apiStatus);
+  setText('dataPoints', state.historyBuffer.length);
+  setText('lastUpdate', new Date().toLocaleTimeString());
+  setText('licenseStatus', state.licenseValid ? 'ACTIVE' : 'INVALID');
+  setText('extApiStatus', state.extApiStatus);
+  setText('corsStatus', state.corsStatus);
+};
+
+// ============================================================
+// AUTHENTICATION & SESSION MANAGEMENT
+// ============================================================
+const start = async () => {
+  const keyInput = $('keyIn');
+  const keyValue = (keyInput?.value || '').trim();
+  const errDiv = $('err');
+  const infoDiv = $('info');
+  const activateBtn = $('activateBtn');
+  
+  if (!keyValue) {
+    if (errDiv) errDiv.textContent = 'Please enter your license key';
+    return;
+  }
+  
+  if (activateBtn) activateBtn.disabled = true;
+  if (infoDiv) infoDiv.textContent = 'Validating license...';
+  
+  try {
+    const validation = await validateLicenseWithBackend(keyValue);
+    
+    if (!validation.valid) {
+      if (errDiv) errDiv.textContent = validation.message || 'License validation failed';
+      if (infoDiv) infoDiv.textContent = '';
+      if (activateBtn) activateBtn.disabled = false;
+      return;
+    }
+    
+    // Store session token (not the license key itself)
+    saveSessionToken(validation.token);
+    
+    state.sessionToken = validation.token;
+    state.licenseValid = true;
+    state.licenseExpiry = validation.expires_at;
+    
+    const loginEl = $('login');
+    const appEl = $('app');
+    const refreshBtn = $('refreshBtn');
+    
+    if (loginEl) loginEl.classList.add('hidden');
+    if (appEl) appEl.classList.remove('hidden');
+    if (refreshBtn) refreshBtn.disabled = false;
+    if (infoDiv) infoDiv.textContent = '';
+    
+    if (keyInput) keyInput.value = '';
+    
+    if (state.timer) clearInterval(state.timer);
+    
+    await refreshNow();
+    state.timer = setInterval(refreshNow, CONFIG.REFRESH_INTERVAL);
+    
+  } catch (error) {
+    if (errDiv) errDiv.textContent = 'Activation error: ' + error.message;
+  } finally {
+    if (activateBtn) activateBtn.disabled = false;
+  }
+};
+
+const verifyLicense = async () => {
+  if (!state.sessionToken) {
+    setText('licenseStatus', 'NO ACTIVE LICENSE');
+    return;
+  }
+  
+  // Check expiration locally
+  const now = Date.now();
+  if (state.licenseExpiry && state.licenseExpiry < now) {
+    state.licenseValid = false;
+    setText('licenseStatus', 'EXPIRED');
+    return;
+  }
+  
+  setText('licenseStatus', 'VERIFIED');
+};
+
+const logout = () => {
+  if (state.timer) clearInterval(state.timer);
+  
+  state.timer = null;
+  state.sessionToken = null;
+  state.licenseValid = false;
+  state.licenseExpiry = null;
+  state.historyBuffer = [];
+  state.previousSignal = null;
+  
+  clearSession();
+  
+  const loginEl = $('login');
+  const appEl = $('app');
+  const keyInput = $('keyIn');
+  const errDiv = $('err');
+  
+  if (loginEl) loginEl.classList.remove('hidden');
+  if (appEl) appEl.classList.add('hidden');
+  if (keyInput) keyInput.value = '';
+  if (errDiv) errDiv.textContent = '';
+  
+  location.reload();
+};
+
+// ============================================================
+// ADMIN PANEL - PROTECTED
+// ============================================================
+const openAdmin = () => {
+  // Only open if licensed
+  if (!state.licenseValid) {
+    alert('Admin panel requires active license');
+    return;
+  }
+  
+  const overlay = $('overlay');
+  if (overlay) overlay.classList.remove('hidden');
+  
+  updateStatusDisplay();
+};
+
+const closeAdmin = () => {
+  const overlay = $('overlay');
+  if (overlay) overlay.classList.add('hidden');
+};
+
+const forceRefresh = () => {
+  state.lastRefreshTime = 0;
+  refreshNow();
+};
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+window.addEventListener('load', () => {
+  const token = getSessionToken();
+  
+  if (!token) {
+    // No active session
+    state.licenseValid = false;
+    return;
+  }
+  
+  // Restore session
+  state.sessionToken = token;
+  state.licenseValid = true;
+  
+  const loginEl = $('login');
+  const appEl = $('app');
+  const refreshBtn = $('refreshBtn');
+  
+  if (loginEl) loginEl.classList.add('hidden');
+  if (appEl) appEl.classList.remove('hidden');
+  if (refreshBtn) refreshBtn.disabled = false;
+  
+  refreshNow();
+  state.timer = setInterval(refreshNow, CONFIG.REFRESH_INTERVAL);
+});
+
+window.addEventListener('beforeunload', () => {
+  if (state.timer) clearInterval(state.timer);
+});
+
+// Verify license expiration periodically
+setInterval(() => {
+  if (state.sessionToken && state.licenseExpiry && state.licenseExpiry < Date.now()) {
+    logout();
+  }
+}, 30000);
+</script>
+</body>
+</html>
