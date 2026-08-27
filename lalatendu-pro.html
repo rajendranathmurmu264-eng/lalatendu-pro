@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LALATENDU PRO • PREMIUM GLOBAL EDITION</title>
+
+<style>
+:root{
+ --bg:#020202;
+ --neon:#00ff41;
+ --gold:#ffd700;
+ --danger:#ff003c;
+ --glass:rgba(255,255,255,.06);
+}
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:radial-gradient(circle at top,#071a0f,#020202);
+ color:#fff;
+ font-family:Segoe UI,system-ui;
+ user-select:none;
+}
+
+/* HEADER */
+.header{text-align:center;padding:26px}
+.title{
+ font-size:36px;font-weight:900;letter-spacing:4px;
+ text-shadow:0 0 12px var(--neon),0 0 30px rgba(0,255,65,.6);
+}
+.sub{font-size:11px;letter-spacing:4px;color:var(--gold)}
+
+/* GLASS */
+.glass{
+ max-width:420px;margin:16px auto;padding:22px;
+ background:var(--glass);
+ border:1px solid rgba(255,255,255,.08);
+ border-radius:22px;
+ backdrop-filter:blur(18px);
+ box-shadow:0 0 40px rgba(0,0,0,.8);
+ text-align:center;
+}
+.hidden{display:none}
+
+/* INPUT */
+input,select{
+ width:100%;padding:14px;margin:10px 0;
+ background:#020202;border:1px solid #222;
+ border-radius:12px;color:var(--neon);text-align:center;
+}
+/* BUTTON */
+button{
+ width:100%;padding:14px;
+ border:none;border-radius:14px;
+ background:linear-gradient(45deg,var(--neon),#008f11);
+ font-weight:800;letter-spacing:2px;
+ cursor:pointer;
+}
+
+/* DISPLAY */
+.pred{font-size:56px;font-weight:900;text-shadow:0 0 25px var(--neon)}
+.sure{
+ margin-top:8px;padding:10px;
+ border:1px dashed var(--gold);
+ border-radius:10px;color:var(--gold);font-weight:700;
+}
+
+/* TABLE */
+table{width:100%;margin-top:16px;border-collapse:collapse;font-size:12px}
+th{color:#777;border-bottom:1px solid #222;padding:6px}
+td{padding:8px;border-bottom:1px solid #111}
+.win{color:var(--neon);font-weight:700}
+.loss{color:var(--danger);font-weight:700}
+.jackpot{color:var(--gold);font-weight:900;text-shadow:0 0 12px var(--gold)}
+
+/* ADMIN FIXED */
+.admin-float{
+ position:fixed;
+ bottom:18px;
+ left:50%;
+ transform:translateX(-50%);
+ padding:10px 28px;
+ border:1px solid var(--gold);
+ border-radius:30px;
+ color:var(--gold);
+ letter-spacing:3px;
+ font-weight:800;
+ cursor:pointer;
+ background:rgba(0,0,0,.6);
+ z-index:5;
+}
+
+/* ADMIN PANEL */
+.overlay{
+ position:fixed;inset:0;
+ background:rgba(0,0,0,.85);
+ z-index:9;
+}
+.admin{ position:fixed;top:50%;left:50%;
+ transform:translate(-50%,-50%);
+ z-index:10;width:90%;max-width:340px;
+ background:#000;border:2px solid var(--gold);
+ border-radius:18px;padding:18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+ <div class="title">
+LALATENDU PRO</div>
+ <div class="sub">PREMIUM • GLOBAL EDITION</div>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="glass">
+ <h3>ENTER LICENSE</h3>
+ <input id="keyIn" autocomplete="off" placeholder="LALATENDU-WANTEDSCARY-VIP-XXXXX-XXXX">
+ <button onclick="start()">ACTIVATE</button>
+ <div id="err" style="color:var(--danger);font-size:12px"></div>
+</div>
+
+<!-- APP -->
+<div id="app" class="glass hidden">
+ <div id="period" style="color:#888">PERIOD: ---</div>
+ <div id="pred" class="pred">WAIT</div>
+ <div id="sure" class="sure">SURE NUMBER: --</div>
+
+ <table>
+  <thead><tr><th>ID</th><th>PRED</th><th>NUM</th><th>STATUS</th></tr></thead>
+  <tbody id="logs"></tbody>
+ </table>
+</div>
+
+<!-- FLOATING ADMIN (ALWAYS VISIBLE) -->
+<div class="admin-float" onclick="openAdmin()">WANTEDSCARY</div>
+
+<!-- ADMIN PANEL -->
+<div id="overlay" class="overlay hidden" onclick="closeAdmin()"></div>
+<div id="admin" class="admin hidden">
+ <h3 style="color:var(--gold);text-align:center">MASTER CONTROL</h3>
+ <select id="valid">
+  <option value="30">30 MIN</option>
+  <option value="1440">1 DAY</option>
+  <option value="10080">7 DAYS</option>
+ </select>
+ <button onclick="genKey()">GENERATE KEY</button>
+ <div id="out" style="margin-top:10px;color:var(--neon);word-break:break-all"></div>
+  <button onclick="copyKey()" style="margin-top:10px">COPY KEY</button></div>
+
+<script>
+const ADMIN_PASS="ARSH";
+const KEY_PREFIX="LALATENDU-WANTEDSCARY-VIP-";
+
+// ✅ GET DOM ELEMENTS
+const login=document.getElementById('login');
+const app=document.getElementById('app');
+const keyIn=document.getElementById('keyIn');
+const err=document.getElementById('err');
+const pred=document.getElementById('pred');
+const sure=document.getElementById('sure');
+const logs=document.getElementById('logs');
+const period=document.getElementById('period');
+const adminPanel=document.getElementById('admin');
+const overlay=document.getElementById('overlay');
+const validSelect=document.getElementById('valid');
+const outDiv=document.getElementById('out');
+
+/* KEY CHECK */
+function validKey(k){
+  if(typeof k!=="string" || !k.startsWith(KEY_PREFIX)) return false;
+  const parts=k.split("-");
+  // ARSH-WANTEDSCARY-VIP-RANDOM-BASE64_EXPIRY
+  if(parts.length!==5 || !parts[3] || !parts[4]) return false;
+  try{
+   const expiry=Number(atob(parts[4]));
+   return Number.isFinite(expiry) && expiry>Date.now();
+  }catch{return false}
+}
+
+function start(){
+ const k=keyIn.value.trim();
+ if(!validKey(k)){err.innerText="INVALID KEY";return}
+  // Use the same storage key that is checked when the page is reopened.
+  localStorage.setItem("VIP_KEY",k);
+ login.classList.add('hidden');
+ app.classList.remove('hidden');
+ run();
+}
+
+/* 🔥 BACKTESTED / DETERMINISTIC PREDICTION ENGINE
+   Note: this measures historical performance; it cannot guarantee future lottery results. */
+let historyBuffer = [];
+const MAX_HISTORY = 500;
+
+function generatePrediction(history) {
+  if (history.length < 20) {
+    return { prediction: "WAIT", sureNumber: "--", confidence: 0 };
+  }
+
+  const recent = history.slice(0, 50);
+  const bigCount = recent.filter(h => h.size === "BIG").length;
+  const smallCount = recent.length - bigCount;
+
+  // Deterministic BIG/SMALL score from several recent windows.
+  const windows = [5, 10, 20, 50];
+  let bigScore = 0, smallScore = 0;
+  const weights = [4, 3, 2, 1];
+
+  windows.forEach((w, i) => {
+    const part = history.slice(0, Math.min(w, history.length));
+    const b = part.filter(h => h.size === "BIG").length;
+    const s = part.length - b;
+    bigScore += weights[i] * (b / part.length);
+    smallScore += weights[i] * (s / part.length);
+  });
+
+  // Recent transition tendency.
+  if (history.length >= 2) {
+    const last = history[0].size;
+    const prev = history[1].size;
+    if (last !== prev) {
+      if (last === "BIG") bigScore += 0.25;
+      else smallScore += 0.25;
+    }
+  }
+
+  const prediction = bigScore >= smallScore ? "BIG" : "SMALL";
+  const totalScore = bigScore + smallScore;
+  const confidence = Math.round((Math.max(bigScore, smallScore) / totalScore) * 100);
+
+  // Deterministic number score: frequency + recency, restricted to predicted size.
+  const pool = prediction === "BIG" ? [5,6,7,8,9] : [0,1,2,3,4];
+  const candidates = pool.map(num => {
+    let score = 0;
+    let occurrences = 0;
+    history.slice(0, 100).forEach((h, i) => {
+      if (h.num === num) {
+        occurrences++;
+        score += Math.pow(0.96, i);
+      }
+    });
+    return { num, score, occurrences };
+  });
+
+  candidates.sort((a,b) =>
+    b.score - a.score || b.occurrences - a.occurrences || a.num - b.num
+  );
+
+  return {
+    prediction,
+    sureNumber: candidates[0].num,
+    confidence
+  };
+}
+
+function backtest(history) {
+  if (history.length < 30) {
+    return { total: 0, bigSmallWins: 0, numberWins: 0, bigSmallRate: 0, numberRate: 0 };
+  }
+
+  let total = 0, bigSmallWins = 0, numberWins = 0;
+
+  // Predict the next result using only results that existed before it.
+  for (let i = history.length - 1; i >= 20; i--) {
+    const past = history.slice(i);
+    const actual = history[i - 1];
+
+    const p = generatePrediction(past);
+    if (p.prediction === actual.size) bigSmallWins++;
+    if (p.sureNumber === actual.num) numberWins++;
+    total++;
+  }
+
+  return {
+    total,
+    bigSmallWins,
+    numberWins,
+    bigSmallRate: total ? Math.round(bigSmallWins / total * 100) : 0,
+    numberRate: total ? Math.round(numberWins / total * 100) : 0
+  };
+}
+
+function updateStats(history) {
+  const s = backtest(history);
+  let box = document.getElementById("stats");
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "stats";
+    box.style.cssText = "margin-top:14px;padding:10px;border:1px solid #222;border-radius:10px;font-size:12px;color:#aaa";
+    const appBox = document.getElementById("app");
+    if (appBox) appBox.insertBefore(box, appBox.querySelector("table"));
+  }
+
+  if (!s.total) {
+    box.innerText = "BACKTEST: Need at least 30 historical results";
+    return;
+  }
+
+  box.innerHTML =
+    "BACKTEST (" + s.total + "): " +
+    "BIG/SMALL " + s.bigSmallRate + "% (" + s.bigSmallWins + "/" + s.total + ") • " +
+    "NUMBER " + s.numberRate + "% (" + s.numberWins + "/" + s.total + ")";
+}
+
+function run(){
+ let lastIssue=null;
+
+ // ⚡ SHOW PREDICTION IMMEDIATELY
+ const initial = generatePrediction(historyBuffer);
+ if (pred) pred.innerText = initial.prediction;
+ if (sure) sure.innerText = "SURE NUMBER: " + initial.sureNumber;
+ window.currentPred = initial.prediction;
+ window.currentSure = initial.sureNumber;
+
+ // 🔄 FETCH DATA EVERY 3 SECONDS
+ setInterval(async()=>{
+  try{
+   const response=await fetch("https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json");
+   const data=await response.json();
+   const list=data.data.list;
+   
+   if(!list || list.length===0) return;   
+   const current=list[0];
+   const currentNum=parseInt(current.number);
+   const currentSize=currentNum>=5?"BIG":"SMALL";
+
+   // Add to history (avoid duplicates)
+   if(historyBuffer.length===0 || historyBuffer[0].issue!==current.issueNumber){
+    historyBuffer.unshift({issue:current.issueNumber, num:currentNum, size:currentSize});
+    if(historyBuffer.length>MAX_HISTORY) historyBuffer.pop();
+   }
+
+   // Generate new prediction for new period
+   if(current.issueNumber!==lastIssue){
+    lastIssue=current.issueNumber;
+    
+    const { prediction, sureNumber } = generatePrediction(historyBuffer);
+    
+    window.currentPred=prediction;
+    window.currentSure=sureNumber;
+    
+    // Update display
+    if(pred) pred.innerText=prediction;
+    if(sure) sure.innerText="SURE NUMBER: "+sureNumber;
+    if(period) period.innerText="PERIOD: "+current.issueNumber;
+   }
+
+   // Check previous result
+   if(window.prevIssue && window.prevIssue!==current.issueNumber){
+    checkResult(current,window.prevIssue,window.prevPred,window.prevSure);
+   }
+
+   window.prevIssue=current.issueNumber;
+   window.prevPred=window.currentPred;
+   window.prevSure=window.currentSure;
+   
+  }catch(error){
+   console.log("Error:",error);
+   // Fallback prediction on error
+   const fallback = generatePrediction(historyBuffer);
+   if(pred) pred.innerText = fallback.prediction;
+   if(sure) sure.innerText = "SURE NUMBER: "+fallback.sureNumber;
+  }
+ },3000);
+}
+
+/* 📊 CHECK RESULT (unchanged) */
+function checkResult(current,prevIssue,prevPred,prevSure){
+ const num=parseInt(current.number);
+ const size=num>=5?"BIG":"SMALL";
+ 
+ let status="LOSE 💔";
+ let className="loss";
+ 
+ if(num===prevSure){
+  status="JACKPOT 🎰";
+  className="jackpot";
+ }else if(size===prevPred){
+  status="VICTORY 💥";
+  className="win";
+ }
+ 
+ const row=document.createElement('tr');
+ row.innerHTML=`
+  <td>${prevIssue.slice(-3)}</td>
+  <td>${prevPred}</td>
+  <td>${num}</td>
+  <td class="${className}">${status}</td>
+ `;
+ 
+ if(logs){
+  logs.insertBefore(row,logs.firstChild);
+  // Keep only last 10 results
+  while(logs.children.length>10){
+   logs.removeChild(logs.lastChild);
+  } }
+}
+
+/* ✅ ADMIN PANEL FUNCTIONS (unchanged) */
+function openAdmin(){
+ const password=prompt("ENTER ADMIN PASSWORD:");
+ if(password===ADMIN_PASS){
+  if(adminPanel) adminPanel.classList.remove('hidden');
+  if(overlay) overlay.classList.remove('hidden');
+ }else if(password!==null){
+  alert("WRONG PASSWORD!");
+ }
+}
+
+function closeAdmin(){
+ if(adminPanel) adminPanel.classList.add('hidden');
+ if(overlay) overlay.classList.add('hidden');
+}
+
+function genKey(){
+ if(!validSelect || !outDiv) return;
+ 
+ const minutes=parseInt(validSelect.value);
+ const expiry=Date.now()+(minutes*60*1000);
+ const random=Math.random().toString(36).substring(2,7).toUpperCase();
+  const key=`${KEY_PREFIX}${random}-${btoa(String(expiry))}`;
+ 
+ outDiv.innerText=key;
+  outDiv.dataset.key=key;
+}
+
+// Clipboard API is unavailable on some file:// pages, so keep a reliable fallback.
+async function copyText(text){
+  // Try the modern API first. Do not gate this on isSecureContext:
+  // some browsers expose clipboard access for a local HTML file even
+  // when window.isSecureContext is false.
+  if(navigator.clipboard && typeof navigator.clipboard.writeText==="function"){
+    try{
+      await navigator.clipboard.writeText(text);
+      return true;
+    }catch(e){
+      // Continue to the legacy click-compatible fallback below.
+    }
+  }
+  const area=document.createElement("textarea");
+  area.value=text;
+  area.setAttribute("readonly","");
+  area.style.position="fixed";
+  area.style.left="-9999px";
+  area.style.opacity="0";
+  document.body.appendChild(area);
+  area.focus();
+  area.select();
+  area.setSelectionRange(0,area.value.length);
+  let copied=false;
+  try{copied=document.execCommand("copy");}catch(e){copied=false;}
+  area.remove();
+  return copied;
+}
+
+async function copyKey(){
+  const key=outDiv && (outDiv.dataset.key || outDiv.innerText.trim());
+  if(!key) { alert("पहले GENERATE KEY दबाएं"); return; }
+  try{
+    if(await copyText(key)) alert("KEY COPIED — अब Clear Board में paste करें");
+    else alert("COPY FAILED — KEY को select करके manually copy करें");
+  }catch(e){
+    alert("COPY FAILED — KEY को select करके manually copy करें");
+  }
+}
+
+// Check for saved key on load
+window.onload=function(){
+ const savedKey=localStorage.getItem('VIP_KEY');
+ if(savedKey && validKey(savedKey)){
+  login.classList.add('hidden');
+  app.classList.remove('hidden');
+  run();
+ }
+};
+</script>
+
+</body>
+</html>
